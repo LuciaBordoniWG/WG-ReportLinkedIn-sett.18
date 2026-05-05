@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WiseGlow Italy — Report Settimanale LinkedIn 27 apr – 3 mag 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+  :root {
+    --blue: #0F766E; --lblue: #5EEAD4;
+    --red: #E24B4A; --gray: #d0d5db; --green: #1D9E75; --amber: #BA7517;
+    --tl-bg: #FFF4EE; --tl-text: #C2410C; --tl-border: #FED7AA;
+    --track-bg: #F5F3FF; --track-text: #6D28D9; --track-border: #DDD6FE;
+    --bg: #F7F8FA; --surface: #FFFFFF; --surface2: #F0F2F5;
+    --text: #1A2332; --text2: #5A6A7E; --border: rgba(74,106,138,0.15);
+    --danger-bg: #FEF2F2; --danger-border: #FECACA; --danger-text: #B91C1C;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--bg); color: var(--text); font-size: 15px; line-height: 1.6; }
+  .page { max-width: 860px; margin: 0 auto; padding: 40px 24px; }
+  .header { margin-bottom: 36px; padding-bottom: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 12px; }
+  .header-title { font-size: 22px; font-weight: 600; color: var(--text); letter-spacing: -0.3px; }
+  .header-sub { font-size: 12px; color: var(--text2); margin-top: 3px; }
+  .header-badge { font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text2); background: var(--surface2); padding: 4px 10px; border-radius: 6px; border: 1px solid var(--border); white-space: nowrap; }
+  .section { margin-bottom: 40px; }
+  .section-title { font-size: 11px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text2); margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid var(--border); font-family: 'DM Mono', monospace; }
+  .metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+  .metric-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .metric-label { font-size: 11px; color: var(--text2); margin-bottom: 5px; }
+  .metric-value { font-size: 24px; font-weight: 600; color: var(--text); line-height: 1; font-family: 'DM Mono', monospace; }
+  .metric-delta { font-size: 12px; margin-top: 5px; font-weight: 500; }
+  .delta-up { color: var(--green); }
+  .delta-down { color: var(--red); }
+  .delta-neutral { color: var(--text2); }
+  .chart-wrap { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; }
+  .chart-inner { position: relative; height: 180px; }
+  .chart-note { font-size: 12px; color: var(--text2); margin-top: 12px; line-height: 1.6; padding-top: 12px; border-top: 1px solid var(--border); }
+  .chart-legend { display: flex; gap: 16px; margin-bottom: 12px; font-size: 12px; color: var(--text2); flex-wrap: wrap; }
+  .chart-legend span { display: flex; align-items: center; gap: 5px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+  .post-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; margin-bottom: 12px; }
+  .post-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 6px; gap: 8px; }
+  .post-meta { font-size: 11px; color: var(--text2); margin-bottom: 10px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .post-name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .post-tag { font-size: 10px; font-weight: 500; padding: 3px 9px; border-radius: 5px; white-space: nowrap; }
+  .tag-tl { background: var(--tl-bg); color: var(--tl-text); border: 1px solid var(--tl-border); }
+  .tag-track { background: var(--track-bg); color: var(--track-text); border: 1px solid var(--track-border); }
+  .post-stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-bottom: 10px; }
+  .post-stat { text-align: center; padding: 7px 4px; background: var(--surface2); border-radius: 6px; }
+  .post-stat-val { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'DM Mono', monospace; }
+  .post-stat-lbl { font-size: 9px; color: var(--text2); margin-top: 2px; line-height: 1.3; }
+  .post-comment { font-size: 12px; line-height: 1.6; padding-top: 10px; border-top: 1px solid var(--border); }
+  .comment-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+  .comment-row:last-child { margin-bottom: 0; }
+  .arrow { font-size: 13px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .arrow-up { color: var(--green); }
+  .arrow-down { color: var(--red); }
+  .arrow-eq { color: var(--amber); }
+  .comment-text { color: var(--text); }
+  .comment-text.gray { color: var(--text2); }
+  .comment-strong { font-weight: 600; }
+  .orari-box { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 20px; }
+  .orari-title { font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 10px; font-family: 'DM Mono', monospace; }
+  .orari-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
+  .decision-box { background: #0F766E; border-radius: 10px; padding: 18px 20px; color: #fff; }
+  .decision-label { font-size: 10px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; opacity: 0.7; margin-bottom: 6px; font-family: 'DM Mono', monospace; }
+  .decision-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .decision-body { font-size: 13px; opacity: 0.85; line-height: 1.55; }
+  @media (max-width: 600px) {
+    .post-stats { grid-template-columns: repeat(3, 1fr); }
+    .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div>
+      <div class="header-title">WiseGlow Italy — Report Settimanale LinkedIn</div>
+      <div class="header-sub">27 aprile – 3 maggio 2026 · 100% organico</div>
+    </div>
+    <div class="header-badge">Settimana 18/2026</div>
+  </div>
+
+  <!-- METRICHE -->
+  <div class="section">
+    <div class="section-title">Metriche chiave</div>
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-label">Follower totali</div>
+        <div class="metric-value">130</div>
+        <div class="metric-delta delta-up">+14 questa settimana</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Impressioni settimana</div>
+        <div class="metric-value">1.522</div>
+        <div class="metric-delta delta-up">+8.7% vs sett. prec. (1.400)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Visitatori pagina</div>
+        <div class="metric-value">27</div>
+        <div class="metric-delta delta-up">+50% vs sett. prec. (18)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Ricerche pagina</div>
+        <div class="metric-value">156</div>
+        <div class="metric-delta delta-down">−33.9% vs sett. prec. (236)</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Commenti esterni</div>
+        <div class="metric-value">0</div>
+        <div class="metric-delta delta-down">gap da colmare</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ANDAMENTO -->
+  <div class="section">
+    <div class="section-title">Andamento settimanale</div>
+    <div class="chart-wrap">
+      <div class="chart-legend">
+        <span><span class="legend-dot" style="background:#0F766E;"></span>Impressioni</span>
+        <span><span class="legend-dot" style="background:rgba(15,118,110,0.35);"></span>Follower +</span>
+        <span><span class="legend-dot" style="background:#5EEAD4;"></span>Visitatori unici</span>
+      </div>
+      <div class="chart-inner"><canvas id="chartWeek"></canvas></div>
+      <div class="chart-note">Picco lunedì 28 apr con Filetto, Chieti (671 impr., 6 follower). Coda martedì 29 apr ancora alta (319 impr.). Giovedì 30 apr Energy Brief con impatto contenuto (134 impr.). Dal 1° maggio calo progressivo senza nuovi post.</div>
+    </div>
+  </div>
+
+  <!-- POST -->
+  <div class="section">
+    <div class="section-title">Post della settimana</div>
+
+    <!-- FILETTO -->
+    <div class="post-card">
+      <div class="post-top">
+        <div class="post-name">Filetto, Chieti — 1 MW in rete</div>
+        <span class="post-tag tag-track">Track record & case study</span>
+      </div>
+      <div class="post-meta">
+        <span>📅 Lunedì 28 apr</span>
+        <span>🕧 12:30</span>
+      </div>
+      <div class="post-stats">
+        <div class="post-stat"><div class="post-stat-val">738</div><div class="post-stat-lbl">Impressioni</div></div>
+        <div class="post-stat"><div class="post-stat-val">414</div><div class="post-stat-lbl">Utenti raggiunti</div></div>
+        <div class="post-stat"><div class="post-stat-val">16.4%</div><div class="post-stat-lbl">CTR</div></div>
+        <div class="post-stat"><div class="post-stat-val">21</div><div class="post-stat-lbl">Reazioni</div></div>
+        <div class="post-stat"><div class="post-stat-val">4</div><div class="post-stat-lbl">Diffusioni</div></div>
+        <div class="post-stat"><div class="post-stat-val">19.8%</div><div class="post-stat-lbl">% interesse</div></div>
+      </div>
+      <div class="post-comment">
+        <div class="comment-row">
+          <span class="arrow arrow-up">↑</span>
+          <span class="comment-text"><span class="comment-strong">CTR 16.4% e % interesse 19.8% — in linea con i migliori track record della pagina.</span> <span class="comment-text gray">Il formato allaccio con foto dell'impianto e dati tecnici sul tracker monoassiale ha confermato il pattern già visto con Povoletto e Guagnano.</span></span>
+        </div>
+        <div class="comment-row">
+          <span class="arrow arrow-up">↑</span>
+          <span class="comment-text"><span class="comment-strong">7 follower acquisiti e 12 visitatori alla pagina.</span> <span class="comment-text gray">Il contenuto track record continua a essere il formato con il ROI più alto in termini di conversione diretta.</span></span>
+        </div>
+        <div class="comment-row">
+          <span class="arrow arrow-up">↑</span>
+          <span class="comment-text"><span class="comment-strong">Coda organica martedì 29 apr: 319 impressioni.</span> <span class="comment-text gray">Il post ha continuato a circolare il giorno successivo con buona intensità.</span></span>
+        </div>
+        <div class="comment-row">
+          <span class="arrow arrow-down">↓</span>
+          <span class="comment-text"><span class="comment-strong">0 commenti.</span> <span class="comment-text gray">Il post conteneva una CTA diretta ("Chi lavora su impianti utility scale: quali differenze state osservando tra tracker e strutture fisse?") ma non ha generato risposte — da monitorare se la domanda tecnica attiva più engagement rispetto alle CTA generiche.</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ENERGY BRIEF -->
+    <div class="post-card">
+      <div class="post-top">
+        <div class="post-name">Energy Brief aprile — riepilogo mensile</div>
+        <span class="post-tag tag-tl">Thought leadership</span>
+      </div>
+      <div class="post-meta">
+        <span>📅 Giovedì 30 apr</span>
+        <span>🕗 08:15</span>
+      </div>
+      <div class="post-stats">
+        <div class="post-stat"><div class="post-stat-val">118</div><div class="post-stat-lbl">Impressioni</div></div>
+        <div class="post-stat"><div class="post-stat-val">59</div><div class="post-stat-lbl">Utenti raggiunti</div></div>
+        <div class="post-stat"><div class="post-stat-val">4.2%</div><div class="post-stat-lbl">CTR</div></div>
+        <div class="post-stat"><div class="post-stat-val">1</div><div class="post-stat-lbl">Reazioni</div></div>
+        <div class="post-stat"><div class="post-stat-val">1</div><div class="post-stat-lbl">Diffusioni</div></div>
+        <div class="post-stat"><div class="post-stat-val">5.9%</div><div class="post-stat-lbl">% interesse</div></div>
+      </div>
+      <div class="post-comment">
+        <div class="comment-row">
+          <span class="arrow arrow-down">↓</span>
+          <span class="comment-text"><span class="comment-strong">Impressioni molto contenute (118) e utenti raggiunti bassi (59).</span> <span class="comment-text gray">Il formato testuale puro senza immagine penalizza la distribuzione algoritmica — LinkedIn favorisce i contenuti visivi nella fase di distribuzione iniziale.</span></span>
+        </div>
+        <div class="comment-row">
+          <span class="arrow arrow-eq">=</span>
+          <span class="comment-text"><span class="comment-strong">CTR 4.2% e % interesse 5.9%.</span> <span class="comment-text gray">In linea con il thought leadership — costruisce autorevolezza, non converte direttamente. I 5 clic indicano interesse reale da parte di chi ha visto il post.</span></span>
+        </div>
+        <div class="comment-row">
+          <span class="arrow arrow-down">↓</span>
+          <span class="comment-text"><span class="comment-strong">0 follower acquisiti, 2 visitatori alla pagina.</span> <span class="comment-text gray">Risultato atteso per il thought leadership — il suo impatto è sulla credibilità e sul traffico esterno nel tempo.</span></span>
+        </div>
+        <div class="comment-row">
+          <span class="arrow arrow-down">↓</span>
+          <span class="comment-text"><span class="comment-strong">0 commenti.</span> <span class="comment-text gray">La CTA ("Quale di questi tre temi vi riguarda più da vicino?") era presente ma non ha generato risposta — serve maggiore specificità o una domanda più provocatoria.</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- NOTA ORARI -->
+  <div class="section">
+    <div class="section-title">Nota orari e giorni di pubblicazione</div>
+    <div class="orari-box">
+      <div class="orari-text">
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="text-align:left;padding:4px 8px 6px 0;color:var(--text);font-weight:600;">Post</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">Giorno</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">Orario</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">Impr.</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">CTR</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">% interesse</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 8px 6px 0;color:var(--text2);">Filetto (Track)</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">Mar 28 apr</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">12:30</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">738</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">16.4%</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">19.8%</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 8px 6px 0;color:var(--text2);">Energy Brief (TL)</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">Gio 30 apr</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">08:15</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">118</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">4.2%</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">5.9%</td>
+            </tr>
+          </tbody>
+        </table>
+        
+      </div>
+    </div>
+  </div>
+
+  <!-- RISULTATO DECISIONE PRECEDENTE -->
+  <div class="section">
+    <div class="orari-box">
+      <div class="orari-text">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;font-family:'DM Mono',monospace;">Risultato decisione settimana precedente</div>
+        <div style="margin-bottom:8px;font-weight:600;color:var(--text);font-size:13px;">Test orario pranzo e mattina infrasettimanale — <span style="color:var(--green);">✓ confermato parzialmente</span></div>
+        <div style="margin-bottom:10px;color:var(--text2);">Entrambi i post pubblicati nelle fasce testate: track record martedì 12:30, thought leadership giovedì 08:15.</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px;">
+          <thead>
+            <tr style="border-bottom:1px solid var(--border);">
+              <th style="text-align:left;padding:4px 8px 6px 0;color:var(--text);font-weight:600;">Post</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">Orario</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">Impr.</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">CTR</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">% interesse</th>
+              <th style="text-align:center;padding:4px 8px 6px;color:var(--text);font-weight:600;">Esito</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom:1px solid var(--border);">
+              <td style="padding:6px 8px 6px 0;color:var(--text2);">Filetto (Track) — Mar 12:30</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">pranzo</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">738</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">16.4%</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">19.8%</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--green);font-weight:600;">✓</td>
+            </tr>
+            <tr>
+              <td style="padding:6px 8px 6px 0;color:var(--text2);">Energy Brief (TL) — Gio 08:15</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">mattina</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">118</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">4.2%</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--text2);">5.9%</td>
+              <td style="text-align:center;padding:6px 8px;color:var(--amber);font-weight:600;">~</td>
+            </tr>
+          </tbody>
+        </table>
+        <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border);">Il martedì a pranzo ha confermato ottime performance per il track record. Le impressioni basse del thought leadership giovedì mattina sono attribuibili principalmente al formato testuale puro — variabile orario non isolabile con certezza.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DECISIONE -->
+  <div class="section">
+    <div class="decision-box">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;opacity:0.7;margin-bottom:10px;font-family:'DM Mono',monospace;">Decisione della settimana</div>
+      <div class="decision-title">Giovedì mattina — stesso orario (08:15), tema diverso</div>
+      <div class="decision-body">Il thought leadership di giovedì 08:15 ha registrato sole 118 impressioni ma non è chiaro se il problema fosse l'orario o il formato testuale puro dell'Energy Brief. Questa settimana: pubblicare giovedì mattina stesso orario con un tema diverso e possibilmente con immagine — per isolare la variabile tematica/formato dall'orario e capire se il giovedì mattina funziona con contenuti più visivi.</div>
+    </div>
+  </div>
+
+</div>
+<script>
+Chart.defaults.font.family = "'DM Sans', sans-serif";
+const TEAL='#0F766E', LTEAL='#5EEAD4', RED='#E24B4A';
+const days = ['Lun 27','Mar 28','Mer 29','Gio 30','Ven 1','Sab 2','Dom 3'];
+const impressioni = [205,671,319,134,75,65,53];
+const follPos = [1,6,1,4,0,1,1];
+const visitatori = [6,9,5,3,1,0,0];
+
+new Chart(document.getElementById('chartWeek'), {
+  type: 'bar',
+  data: {
+    labels: days,
+    datasets: [
+      { label: 'Impressioni', data: impressioni, backgroundColor: TEAL, borderRadius: 3, yAxisID: 'y' },
+      { label: 'Follower +', data: follPos, backgroundColor: 'rgba(15,118,110,0.35)', borderRadius: 3, yAxisID: 'y2' },
+      { label: 'Visitatori', data: visitatori, type: 'line', borderColor: LTEAL, backgroundColor: 'rgba(94,234,212,0.1)', tension: 0.3, pointRadius: 3, fill: true, borderWidth: 2, yAxisID: 'y2' }
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      y: { position: 'left', ticks: { font: { size: 10 } }, grid: { color: 'rgba(0,0,0,0.06)' } },
+      y2: { position: 'right', ticks: { font: { size: 10 } }, grid: { display: false }, max: 15 },
+      x: { ticks: { font: { size: 10 } }, grid: { display: false } }
+    }
+  }
+});
+</script>
+</body>
+</html>
